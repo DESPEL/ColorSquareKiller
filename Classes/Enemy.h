@@ -5,8 +5,8 @@
 class Enemy : public cocos2d::Sprite
 {
 public:
-	float hp;
-	float maxHP;
+	double hp;
+	double maxHP;
 
 	bool init();
 	// TODO: Enemy with sprite file and other things

@@ -156,6 +156,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClCompile Include="..\Classes\Layers\BoostersMenu.cpp" />
     <ClCompile Include="..\Classes\Layers\ShopMenu.cpp" />
     <ClCompile Include="..\Classes\Layers\UpgradesMenu.cpp" />
+    <ClCompile Include="..\Classes\Player\Currency.cpp" />
     <ClCompile Include="..\Classes\Player\Data.cpp" />
     <ClCompile Include="..\Classes\Scenes\MainScene.cpp" />
     <ClCompile Include="..\Classes\Utils.cpp" />
@@ -168,6 +169,8 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClInclude Include="..\Classes\Layers\BoostersMenu.h" />
     <ClInclude Include="..\Classes\Layers\ShopMenu.h" />
     <ClInclude Include="..\Classes\Layers\UpgradesMenu.h" />
+    <ClInclude Include="..\Classes\Macros.h" />
+    <ClInclude Include="..\Classes\Player\Currency.h" />
     <ClInclude Include="..\Classes\Player\Data.h" />
     <ClInclude Include="..\Classes\Scenes\MainScene.h" />
     <ClInclude Include="..\Classes\Utils.h" />

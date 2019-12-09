@@ -11,7 +11,8 @@
 #include "Layers/UpgradesMenu.h"
 #include "Layers/BoostersMenu.h"
 
-// data
+#include "Player/Currency.h"
+#include "Player/Data.h"
 
 // others
 #include "Enemy.h"
@@ -22,12 +23,21 @@ class MainScene : public cocos2d::Scene
 	void createUpgradesButton();
 	void createBoostersButton();
 
+	void attackEnemy(double dmg);
 	void addEnemy();
+	void enemyBounty();
 
 	Enemy* enemy = nullptr;
 	cocos2d::ui::LoadingBar* hpBar = nullptr;
 
+	cocos2d::Label* waveLabel;
 	cocos2d::Label* hpLabel;
+
+	cocos2d::Label* moneyLabel;
+	cocos2d::Label* gemsLabel;
+
+	cocos2d::Label* dpsLabel;
+	cocos2d::Label* damageLabel;
 
 public:
 	static cocos2d::Scene* createScene();

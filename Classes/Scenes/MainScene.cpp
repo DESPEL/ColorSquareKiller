@@ -38,6 +38,31 @@ bool MainScene::init() {
 	hpLabel->setPosition(visibleSize.width / 2, 100);
 	this->addChild(hpLabel);
 
+	moneyLabel = Label::createWithSystemFont("Gold: xxxx", "Arial", 48);
+	moneyLabel->setAnchorPoint({ 0.0f, 0.5f });
+	moneyLabel->setPosition({ 50, visibleSize.height - 250 });
+	this->addChild(moneyLabel);
+
+	gemsLabel = Label::createWithSystemFont("Gems: xxxx", "Arial", 48);
+	gemsLabel->setAnchorPoint({ 0.0f, 0.5f });
+	gemsLabel->setPosition({ 50, visibleSize.height - 350 });
+	this->addChild(gemsLabel);
+
+	dpsLabel = Label::createWithSystemFont("DPS: xxxx", "Arial", 48);
+	dpsLabel->setAnchorPoint({ 0.0f, 0.5f });
+	dpsLabel->setPosition({ 50, visibleSize.height - 450 });
+	this->addChild(dpsLabel);
+
+	damageLabel = Label::createWithSystemFont("DPC: xxxx", "Arial", 48);
+	damageLabel->setAnchorPoint({ 0.0f, 0.5f });
+	damageLabel->setPosition({ 50, visibleSize.height - 550 });
+	this->addChild(damageLabel);
+
+	waveLabel = Label::createWithSystemFont("wave: xxxx", "Arial", 48);
+	waveLabel->setAnchorPoint({ 0.0f, 0.5f });
+	waveLabel->setPosition({ 100 + 300 * 3 + 25 * 3 , visibleSize.height - 100 });
+	this->addChild(waveLabel);
+
 	// test enemy
 	addEnemy();
 
@@ -58,10 +83,28 @@ bool MainScene::init() {
 	this->schedule(schedule_selector(MainScene::update));
 }
 
+void MainScene::enemyBounty() {
+	// idk but ok
+	Currency::addMoney(pow(1.0125,UserData::getWave()));
+}
+
+void MainScene::attackEnemy(double dmg) {
+	if (dmg < 0)
+		throw "Cannot take negative damage";
+	this->enemy->hp -= dmg;
+	if (this->enemy->hp <= 0) {
+		enemyBounty();
+		UserData::nextWave();
+		this->enemy->removeFromParentAndCleanup(true);
+		this->addEnemy();
+	}
+}
+
+
 void MainScene::addEnemy() {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 
-	this->enemy = Enemy::create(20);
+	this->enemy = Enemy::create((double)ENEMY_BASE_HP * pow(1.013, UserData::getWave()));
 	this->enemy->setPosition(visibleSize / 2);
 	this->addChild(this->enemy);
 	auto listener = EventListenerTouchOneByOne::create();
@@ -72,11 +115,7 @@ void MainScene::addEnemy() {
 		cocos2d::Rect hitbox = this->enemy->getBoundingBox();
 
 		if (hitbox.containsPoint(position)) {
-			this->enemy->hp--;
-			if (this->enemy->hp <= 0) {
-				this->enemy->removeFromParentAndCleanup(true);
-				this->addEnemy();
-			}
+			attackEnemy(UserData::getDamage());
 			log("enemy touched");
 			return true;
 		}
@@ -88,12 +127,27 @@ void MainScene::addEnemy() {
 }
 
 void MainScene::update(float delta) {
+
+	// attack enemy (dps)
+	attackEnemy(UserData::getDPS() * delta);
+
 	// update hp;
 	std::string newHp = "hp: " + std::to_string((int)this->enemy->hp) + 
 						"/" + std::to_string((int)this->enemy->maxHP);
 
 	hpBar->setPercent(this->enemy->hp / this->enemy->maxHP * 100);
 	this->hpLabel->setString(newHp);
+
+	// update money and gems
+	this->moneyLabel->setString("Gold: " + std::to_string(Currency::getMoney()));
+	this->gemsLabel->setString("Gems: " + std::to_string(Currency::getGems()));
+
+	// update dps and dpc
+	this->dpsLabel->setString("DPS: " + std::to_string(UserData::getDPS()));
+	this->damageLabel->setString("DPC: " + std::to_string(UserData::getDamage()));
+
+	// udate wave
+	this->waveLabel->setString("Wave: " + std::to_string(UserData::getWave()));
 }
 
 void MainScene::createBoostersButton() {
