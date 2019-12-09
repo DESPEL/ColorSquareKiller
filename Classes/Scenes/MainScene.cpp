@@ -34,12 +34,24 @@ bool MainScene::init() {
 
 	// labels
 	hpLabel = Label::createWithSystemFont("hp: xxx", "Arial", 48);
-	hpLabel->setAnchorPoint({ 0.0f, 0.0f });
-	hpLabel->setPosition(25, 100);
+	hpLabel->setAnchorPoint({ 0.5f, 0.5f });
+	hpLabel->setPosition(visibleSize.width / 2, 100);
 	this->addChild(hpLabel);
 
 	// test enemy
 	addEnemy();
+
+	this->hpBar = ui::LoadingBar::create("hpbarfill.png");
+	auto hpborder = Sprite::create();
+	hpborder->initWithFile("hpbarborder.png");
+	hpborder->setAnchorPoint({ 0.0f, 0.0f });
+	hpBar->addChild(hpborder);
+
+	// set the direction of the loading bars progress
+	hpBar->setDirection(ui::LoadingBar::Direction::LEFT);
+	hpBar->setPercent(100);
+	hpBar->setPosition({ visibleSize.width / 2, 200 });
+	this->addChild(hpBar);
 
 
 	// update
@@ -61,7 +73,7 @@ void MainScene::addEnemy() {
 
 		if (hitbox.containsPoint(position)) {
 			this->enemy->hp--;
-			if (this->enemy->hp < 0) {
+			if (this->enemy->hp <= 0) {
 				this->enemy->removeFromParentAndCleanup(true);
 				this->addEnemy();
 			}
@@ -79,6 +91,8 @@ void MainScene::update(float delta) {
 	// update hp;
 	std::string newHp = "hp: " + std::to_string(this->enemy->hp) + 
 						"/" + std::to_string(this->enemy->maxHP);
+
+	hpBar->setPercent(this->enemy->hp / (float)this->enemy->maxHP * 100);
 	this->hpLabel->setString(newHp);
 }
 

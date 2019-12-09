@@ -25,6 +25,7 @@ class MainScene : public cocos2d::Scene
 	void addEnemy();
 
 	Enemy* enemy = nullptr;
+	cocos2d::ui::LoadingBar* hpBar = nullptr;
 
 	cocos2d::Label* hpLabel;
 
