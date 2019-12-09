@@ -5,6 +5,9 @@
 #include "Utils.h"
 #include "ui/CocosGUI.h"
 
+#include "Player/Data.h"
+#include "Player/Currency.h"
+
 class ShopMenu : public cocos2d::Layer
 {
 public:

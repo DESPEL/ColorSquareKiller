@@ -31,6 +31,7 @@ bool MainScene::init() {
 	createShopButton();
 	createUpgradesButton();
 	createBoostersButton();
+	createDeleteDataButton();
 
 	// labels
 	hpLabel = Label::createWithSystemFont("hp: xxx", "Arial", 48);
@@ -148,6 +149,46 @@ void MainScene::update(float delta) {
 
 	// udate wave
 	this->waveLabel->setString("Wave: " + std::to_string(UserData::getWave()));
+}
+
+
+void MainScene::createDeleteDataButton() {
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+
+	ui::Button* shopbtn = ui::Button::create();
+
+	shopbtn->loadTextures(
+		"buttons/red_button00.png",
+		"buttons/red_button01.png"
+	);
+	shopbtn->setTitleText("Delete data");
+	shopbtn->setTitleFontName("arial");
+
+	shopbtn->setTitleFontSize(44.0f);
+	Utils::resizeButton(shopbtn, { 300, 100 });
+	const auto touch_handler = [&](cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType evt)
+	{
+		if (evt == cocos2d::ui::Widget::TouchEventType::ENDED)
+		{
+			attackEnemy(1E50);
+			log("data cleared");
+			UserDefault::getInstance()->deleteValueForKey(MONEY_KEY);
+			UserDefault::getInstance()->deleteValueForKey(GEMS_KEY);
+			UserDefault::getInstance()->deleteValueForKey(BASE_DAMAGE_KEY);
+			UserDefault::getInstance()->deleteValueForKey(MULTIPLIER_KEY);
+			UserDefault::getInstance()->deleteValueForKey(CRIT_CHANCE_KEY);
+			UserDefault::getInstance()->deleteValueForKey(CRIT_MULTIPLIER_KEY);
+			UserDefault::getInstance()->deleteValueForKey(BASE_DPS_KEY);
+			UserDefault::getInstance()->deleteValueForKey(MULTIPLIER_DPS_KEY);
+			UserDefault::getInstance()->deleteValueForKey(ROUND_KEY);
+			UserDefault::getInstance()->deleteValueForKey(ENEMY_KEY);
+			UserDefault::getInstance()->deleteValueForKey(WAVE_KEY);
+		}
+	};
+	shopbtn->addTouchEventListener(touch_handler);
+	shopbtn->setAnchorPoint(Vec2(0.0f, 1.0f));
+	shopbtn->setPosition({ visibleSize.width - 325, visibleSize.height - 50 });
+	this->addChild(shopbtn);
 }
 
 void MainScene::createBoostersButton() {

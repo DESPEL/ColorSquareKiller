@@ -16,12 +16,14 @@
 
 // others
 #include "Enemy.h"
+#include "Macros.h"
 
 class MainScene : public cocos2d::Scene
 {
 	void createShopButton();
 	void createUpgradesButton();
 	void createBoostersButton();
+	void createDeleteDataButton();
 
 	void attackEnemy(double dmg);
 	void addEnemy();
