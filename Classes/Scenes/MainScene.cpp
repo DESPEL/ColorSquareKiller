@@ -89,10 +89,10 @@ void MainScene::addEnemy() {
 
 void MainScene::update(float delta) {
 	// update hp;
-	std::string newHp = "hp: " + std::to_string(this->enemy->hp) + 
-						"/" + std::to_string(this->enemy->maxHP);
+	std::string newHp = "hp: " + std::to_string((int)this->enemy->hp) + 
+						"/" + std::to_string((int)this->enemy->maxHP);
 
-	hpBar->setPercent(this->enemy->hp / (float)this->enemy->maxHP * 100);
+	hpBar->setPercent(this->enemy->hp / this->enemy->maxHP * 100);
 	this->hpLabel->setString(newHp);
 }
 
