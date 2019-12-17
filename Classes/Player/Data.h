@@ -33,5 +33,14 @@ public:
 	static int getWave();
 	static void nextWave();
 
+	static void setEnemiesPerWave(int amount);
+	static int getEnemiesPerWave();
+
+	static int getEnemyNumber();
+	static void setEnemyNumber(int number);
+
+	static void nextRound();
+	static int getRoundNumber();
+
 };
 

@@ -17,3 +17,5 @@
 
 #define WAVE_KEY "wave"
 #define ENEMY_BASE_HP 10
+
+#define NUM_ENEMIES_KEY "enemiesperwave"

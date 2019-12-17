@@ -1,6 +1,7 @@
 #include "MainScene.h"
 
 USING_NS_CC;
+using namespace gsl;
 
 Scene* MainScene::createScene() {
 	return MainScene::create();
@@ -10,19 +11,19 @@ bool MainScene::init() {
 	if (!Scene::init())
 		return false;
 
-	Vec2 origin = Director::getInstance()->getVisibleOrigin();
-	auto visibleSize = Director::getInstance()->getVisibleSize();
+	const Vec2 origin = Director::getInstance()->getVisibleOrigin();
+	const Size visibleSize = Director::getInstance()->getVisibleSize();
 
-	auto label = Label::createWithSystemFont("Main Scene", "Arial", 80);
+	const not_null<Label*> label = Label::createWithSystemFont("Main Scene", "Arial", 80);
 	label->setPosition(visibleSize / 2);
 	this->addChild(label);
 
-	auto background = Sprite::create();
+	const not_null<Sprite*> background = Sprite::create();
 	background->initWithFile("images/background1.jpg");
 	background->setAnchorPoint({ 0.5f, 0.5f });
 	background->setPosition(visibleSize / 2);
 	background->setZOrder(std::numeric_limits<int32_t>::min());
-	background->setOpacity(GLubyte(150));
+	background->setOpacity(static_cast<GLubyte>(150));
 	
 	this->addChild(background);
 
@@ -68,7 +69,7 @@ bool MainScene::init() {
 	addEnemy();
 
 	this->hpBar = ui::LoadingBar::create("hpbarfill.png");
-	auto hpborder = Sprite::create();
+	const not_null<Sprite*> hpborder = Sprite::create();
 	hpborder->initWithFile("hpbarborder.png");
 	hpborder->setAnchorPoint({ 0.0f, 0.0f });
 	hpBar->addChild(hpborder);
@@ -103,17 +104,17 @@ void MainScene::attackEnemy(double dmg) {
 
 
 void MainScene::addEnemy() {
-	auto visibleSize = Director::getInstance()->getVisibleSize();
+	const Size visibleSize = Director::getInstance()->getVisibleSize();
 
-	this->enemy = Enemy::create((double)ENEMY_BASE_HP * pow(1.013, UserData::getWave()));
+	this->enemy = Enemy::create(static_cast<double>(ENEMY_BASE_HP) *pow(1.013, UserData::getWave()));
 	this->enemy->setPosition(visibleSize / 2);
 	this->addChild(this->enemy);
-	auto listener = EventListenerTouchOneByOne::create();
+	const auto listener = EventListenerTouchOneByOne::create();
 	listener->setSwallowTouches(true);
 
 	listener->onTouchBegan = [&](Touch* touch, Event* event) {
-		cocos2d::Vec2 position = touch->getLocation();
-		cocos2d::Rect hitbox = this->enemy->getBoundingBox();
+		const Vec2 position = touch->getLocation();
+		const Rect hitbox = this->enemy->getBoundingBox();
 
 		if (hitbox.containsPoint(position)) {
 			attackEnemy(UserData::getDamage());
@@ -149,24 +150,27 @@ void MainScene::update(float delta) {
 
 	// udate wave
 	this->waveLabel->setString("Wave: " + std::to_string(UserData::getWave()));
+	this->waveLabel->setString("Enemy: " + std::to_string(UserData::getEnemyNumber()) +
+		"/" + std::to_string(UserData::getEnemiesPerWave()) +
+		" Round:" + std::to_string(UserData::getRoundNumber()));
 }
 
 
 void MainScene::createDeleteDataButton() {
-	auto visibleSize = Director::getInstance()->getVisibleSize();
+	const Size visibleSize = Director::getInstance()->getVisibleSize();
 
-	ui::Button* shopbtn = ui::Button::create();
+	not_null<ui::Button*> shopbtn = ui::Button::create();
 
 	shopbtn->loadTextures(
 		"buttons/red_button00.png",
 		"buttons/red_button01.png"
 	);
-	shopbtn->setTitleText("Delete data");
+	shopbtn->setTitleText("Erase data");
 	shopbtn->setTitleFontName("arial");
 
 	shopbtn->setTitleFontSize(44.0f);
 	Utils::resizeButton(shopbtn, { 300, 100 });
-	const auto touch_handler = [&](cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType evt)
+	const auto touch_handler = [&](Ref* ref, ui::Widget::TouchEventType evt)
 	{
 		if (evt == cocos2d::ui::Widget::TouchEventType::ENDED)
 		{
@@ -183,6 +187,7 @@ void MainScene::createDeleteDataButton() {
 			UserDefault::getInstance()->deleteValueForKey(ROUND_KEY);
 			UserDefault::getInstance()->deleteValueForKey(ENEMY_KEY);
 			UserDefault::getInstance()->deleteValueForKey(WAVE_KEY);
+			UserDefault::getInstance()->deleteValueForKey(NUM_ENEMIES_KEY);
 		}
 	};
 	shopbtn->addTouchEventListener(touch_handler);
@@ -192,9 +197,9 @@ void MainScene::createDeleteDataButton() {
 }
 
 void MainScene::createBoostersButton() {
-	auto visibleSize = Director::getInstance()->getVisibleSize();
+	const Size visibleSize = Director::getInstance()->getVisibleSize();
 
-	ui::Button* upgradebtn = ui::Button::create();
+	const not_null<ui::Button*> upgradebtn = ui::Button::create();
 
 	upgradebtn->loadTextures(
 		"buttons/green_button00.png",
@@ -220,9 +225,9 @@ void MainScene::createBoostersButton() {
 }
 
 void MainScene::createUpgradesButton() {
-	auto visibleSize = Director::getInstance()->getVisibleSize();
+	const Size visibleSize = Director::getInstance()->getVisibleSize();
 
-	ui::Button* upgradebtn = ui::Button::create();
+	const not_null<ui::Button*> upgradebtn = ui::Button::create();
 
 	upgradebtn->loadTextures(
 		"buttons/green_button00.png",
@@ -233,9 +238,9 @@ void MainScene::createUpgradesButton() {
 
 	upgradebtn->setTitleFontSize(44.0f);
 	Utils::resizeButton(upgradebtn, { 300, 100 });
-	const auto touch_handler = [&](cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType evt)
+	const auto touch_handler = [&](Ref* ref, ui::Widget::TouchEventType evt)
 	{
-		if (evt == cocos2d::ui::Widget::TouchEventType::ENDED)
+		if (evt == ui::Widget::TouchEventType::ENDED)
 		{
 			log("upgrades opened");
 			this->addChild(UpgradesMenu::create());
@@ -248,9 +253,9 @@ void MainScene::createUpgradesButton() {
 }
 
 void MainScene::createShopButton() {
-	auto visibleSize = Director::getInstance()->getVisibleSize();
+	const Size visibleSize = Director::getInstance()->getVisibleSize();
 
-	ui::Button* shopbtn = ui::Button::create();
+	const not_null<ui::Button*> shopbtn = ui::Button::create();
 
 	shopbtn->loadTextures(
 		"buttons/green_button00.png",
@@ -261,9 +266,9 @@ void MainScene::createShopButton() {
 
 	shopbtn->setTitleFontSize(44.0f);
 	Utils::resizeButton(shopbtn, { 300, 100 });
-	const auto touch_handler = [&](cocos2d::Ref* ref, cocos2d::ui::Widget::TouchEventType evt)
+	const auto touch_handler = [&](Ref* ref, ui::Widget::TouchEventType evt)
 	{
-		if (evt == cocos2d::ui::Widget::TouchEventType::ENDED)
+		if (evt == ui::Widget::TouchEventType::ENDED)
 		{
 			log("shop opened");
 			this->addChild(ShopMenu::create());

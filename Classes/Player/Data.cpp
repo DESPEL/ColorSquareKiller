@@ -83,5 +83,40 @@ int UserData::getWave() {
 }
 
 void UserData::nextWave() {
+	if (getEnemyNumber() >= getEnemiesPerWave()) {
+		setEnemyNumber(0);
+		nextRound();
+	}
+
+	setEnemyNumber(getEnemyNumber() + 1);
+
 	playerData->setIntegerForKey(WAVE_KEY, getWave() + 1);
+}
+
+void UserData::setEnemiesPerWave(int amount) {
+	playerData->setIntegerForKey(NUM_ENEMIES_KEY, amount);
+}
+
+int UserData::getEnemiesPerWave() {
+	const int numEnemies = playerData->getIntegerForKey(NUM_ENEMIES_KEY);
+	if (numEnemies == 0) {
+		setEnemiesPerWave(10);
+	}
+	return playerData->getIntegerForKey(NUM_ENEMIES_KEY);
+}
+
+int UserData::getEnemyNumber() {
+	return playerData->getIntegerForKey(ENEMY_KEY);
+}
+
+void UserData::setEnemyNumber(int number) {
+	playerData->setIntegerForKey(ENEMY_KEY, number);
+}
+
+void UserData::nextRound() {
+	playerData->setIntegerForKey(ROUND_KEY, playerData->getIntegerForKey(ROUND_KEY) + 1);
+}
+
+int UserData::getRoundNumber() {
+	return playerData->getIntegerForKey(ROUND_KEY);
 }

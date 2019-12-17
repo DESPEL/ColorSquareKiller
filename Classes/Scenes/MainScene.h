@@ -1,5 +1,7 @@
 #pragma once
 
+#include <gsl.h>
+
 #include "cocos2d.h"
 
 #include "ui/CocosGUI.h"
@@ -43,7 +45,7 @@ class MainScene : public cocos2d::Scene
 
 public:
 	static cocos2d::Scene* createScene();
-	virtual bool init();
+	bool init() override;
 
 	CREATE_FUNC(MainScene);
 
